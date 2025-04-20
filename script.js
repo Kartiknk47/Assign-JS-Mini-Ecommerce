@@ -1,4 +1,4 @@
-let products = [        
+let products = [
   { id: 1, name: "Laptop", price: 1000, category: "Electronics", stock: 5 },
   { id: 2, name: "Headphones", price: 200, category: "Electronics", stock: 15 },
   { id: 3, name: "T-shirt", price: 20, category: "Apparel", stock: 50 },
@@ -24,6 +24,7 @@ function renderList(productArray) {
           <p class="card-text">Price: $${product.price}</p>
           <p class="card-text">Category: ${product.category}</p>
           <p class="card-text">Stock: ${product.stock}</p>
+          <button class="btn btn-primary mr-2" onclick="editProduct(${product.id})">Edit</button>
           <button class="btn btn-danger" onclick="deleteProd(${product.id})">Delete</button>
         </div>
       </div>
@@ -31,7 +32,9 @@ function renderList(productArray) {
   `).join('');
 }
 
-// Add a new product
+let editId = null;  // Track product being edited
+
+// Add or update product
 function addNewPro() {
   const name = document.getElementById('productName').value.trim();
   const price = parseFloat(document.getElementById('productPrice').value);
@@ -43,26 +46,45 @@ function addNewPro() {
     return;
   }
 
-  const productsFromLocal = getFromLocal();
-  const newProduct = {
-    id: Date.now(),
-    name: name,
-    price: price,
-    category: category,
-    stock: stock
-  };
+  let productsFromLocal = getFromLocal();
 
-  productsFromLocal.push(newProduct);
+  if (editId !== null) {
+    // Update existing product
+    const index = productsFromLocal.findIndex(p => p.id === editId);
+    if (index !== -1) {
+      productsFromLocal[index] = {
+        id: editId,
+        name: name,
+        price: price,
+        category: category,
+        stock: stock
+      };
+      editId = null;
+      document.getElementById('mainButton').textContent = "Add Product";
+    }
+  } else {
+    // Add new product
+    const newProduct = {
+      id: Date.now(),
+      name: name,
+      price: price,
+      category: category,
+      stock: stock
+    };
+    productsFromLocal.push(newProduct);
+  }
+
   setToLocal(productsFromLocal);
   renderList(productsFromLocal);
+  clearForm();
 }
 
 // Filter by product name
 function filterProducts() {
   const key = document.getElementById('filterKey').value.trim().toLowerCase();
   const productsFromLocal = getFromLocal();
-  const filteredProducts = productsFromLocal.filter((p) => p.name.toLowerCase() === key);
-  
+  const filteredProducts = productsFromLocal.filter(p => p.name.toLowerCase() === key);
+
   renderList(filteredProducts);
 }
 
@@ -70,7 +92,7 @@ function filterProducts() {
 function filterCategory() {
   const key = document.getElementById('filterKey').value.trim().toLowerCase();
   const productsFromLocal = getFromLocal();
-  const filteredProducts = productsFromLocal.filter((p) => p.category.toLowerCase() === key);
+  const filteredProducts = productsFromLocal.filter(p => p.category.toLowerCase() === key);
 
   renderList(filteredProducts);
 }
@@ -78,7 +100,7 @@ function filterCategory() {
 // Delete a product
 function deleteProd(id) {
   let productsFromLocal = getFromLocal();
-  const index = productsFromLocal.findIndex((p) => p.id === id);
+  const index = productsFromLocal.findIndex(p => p.id === id);
 
   if (index !== -1) {
     productsFromLocal.splice(index, 1);
@@ -87,10 +109,33 @@ function deleteProd(id) {
   }
 }
 
-// Initialize localStorage if empty
+// Edit a product
+function editProduct(id) {
+  const productsFromLocal = getFromLocal();
+  const product = productsFromLocal.find(p => p.id === id);
+
+  if (product) {
+    document.getElementById('productName').value = product.name;
+    document.getElementById('productPrice').value = product.price;
+    document.getElementById('productCategory').value = product.category;
+    document.getElementById('productStock').value = product.stock;
+
+    editId = id; // store id for update
+    document.getElementById('mainButton').textContent = "Update Product";
+  }
+}
+
+// Clear form after add/update
+function clearForm() {
+  document.getElementById('productName').value = "";
+  document.getElementById('productPrice').value = "";
+  document.getElementById('productCategory').value = "";
+  document.getElementById('productStock').value = "";
+  document.getElementById('filterKey').value = "";
+}
+
 if (!localStorage.getItem('products')) {
   setToLocal(products);
 }
 
-// Load and render initial list
 renderList(getFromLocal());
