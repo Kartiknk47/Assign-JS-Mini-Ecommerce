@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Product Manager</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    
+    <style>
+      body {
+        background-color: #f8f9fa;
+      }
+      .card-title {
+        font-weight: bold;
+      }
+      .card-text {
+        margin-bottom: 0.5rem;
+      }
+      .section-title {
+        border-bottom: 2px solid #007bff;
+        display: inline-block;
+        padding-bottom: 0.3rem;
+        margin-bottom: 1.5rem;
+      }
+      .btn-group-custom {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container mt-5">
+      <h2 class="section-title">Add New Product</h2>
+      <div class="card p-4 shadow-sm">
+        <div class="form-group">
+          <label for="productName">Product Name</label>
+          <input type="text" class="form-control" id="productName" placeholder="Enter product name">
+        </div>
+        <div class="form-group">
+          <label for="productPrice">Product Price ($)</label>
+          <input type="number" class="form-control" id="productPrice" placeholder="Enter product price">
+        </div>
+        <div class="form-group">
+          <label for="productCategory">Product Category</label>
+          <input type="text" class="form-control" id="productCategory" placeholder="Enter product category">
+        </div>
+        <div class="form-group">
+          <label for="productStock">Product Stock</label>
+          <input type="number" class="form-control" id="productStock" placeholder="Enter product stock">
+        </div>
+        <button onclick="addNewPro()" class="btn btn-primary btn-block">Add Product</button>
+      </div>
+    </div>
+
+    <div class="container mt-5">
+      <h4 class="section-title">Filter Products</h4>
+      <div class="card p-4 shadow-sm">
+        <div class="form-group">
+          <input type="text" class="form-control" id="filterKey" placeholder="Enter keyword">
+        </div>
+        <div class="btn-group-custom">
+          <button onclick="filterProducts()" class="btn btn-primary">Filter By Name</button>
+          <button onclick="filterCategory()" class="btn btn-secondary">Filter By Category</button>
+          <button onclick="renderList(getFromLocal())" class="btn btn-outline-dark">Show All</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="container mt-5 mb-5">
+      <h4 class="section-title">Product List</h4>
+      <div class="row" id="productList"></div>
+    </div>
+
+    <!-- JavaScript and Bootstrap Scripts -->
+    <script src="script.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  </body>
+</html>
